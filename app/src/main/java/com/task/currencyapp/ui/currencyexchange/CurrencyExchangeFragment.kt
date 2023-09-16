@@ -31,11 +31,9 @@ class CurrencyExchangeFragment :
     override fun initView() {
         etValueFrom.addTextChangedListener(textWatcherFrom)
         etValueTo.addTextChangedListener(textWatcherTo)
-
         btnSwap.setOnClickListener {
             swapButtonClicked()
         }
-
         viewModel.getCurrencyRates()
     }
 
@@ -109,19 +107,24 @@ class CurrencyExchangeFragment :
     }
 
     fun setupValueTo() {
-        //From Endpoint Base is EUR to All Currencies rate
-        //Equation = (rateCurrencyFrom / rateCurrencyTo) * numbers of [CurrencyFrom]
-        val fromFieldNumbers = etValueFrom.text.toString().toDouble()
-        val result = (exchangeToRate / exchangeFromRate) * fromFieldNumbers
-        val formattedValue = String.format("%.2f", result)
-        etValueTo.setText(formattedValue)
+        // From Endpoint Base is EUR to All Currencies rate
+        // Equation = (rateCurrencyFrom / rateCurrencyTo) * numbers of [CurrencyFrom]
+
+        if (etValueFrom.text.isNullOrEmpty().not()) {
+            val fromFieldNumbers = etValueFrom.text.toString().toDouble()
+            val result = (exchangeToRate / exchangeFromRate) * fromFieldNumbers
+            val formattedValue = String.format("%.2f", result)
+            etValueTo.setText(formattedValue)
+        }
     }
 
     fun setupValueFrom() {
-        val toFieldNumbers = etValueTo.text.toString().toDouble()
-        val result = (exchangeFromRate / exchangeToRate) * toFieldNumbers
-        val formattedValue = String.format("%.2f", result)
-        etValueFrom.setText(formattedValue)
+        if (etValueTo.text.isNullOrEmpty().not()) {
+            val toFieldNumbers = etValueTo.text.toString().toDouble()
+            val result = (exchangeFromRate / exchangeToRate) * toFieldNumbers
+            val formattedValue = String.format("%.2f", result)
+            etValueFrom.setText(formattedValue)
+        }
     }
 
     private val textWatcherFrom = object : TextWatcher {
@@ -161,7 +164,10 @@ class CurrencyExchangeFragment :
     }
 
     private fun swapButtonClicked() {
-        spFromCurrencies.setSelection(spFromCurrencies.selectedItemPosition)
-        spToCurrencies.setSelection(spToCurrencies.selectedItemPosition)
+        val spFromCurrenciesPosition = spFromCurrencies.selectedItemPosition
+        val spToCurrenciesPosition = spToCurrencies.selectedItemPosition
+
+        spFromCurrencies.setSelection(spToCurrenciesPosition)
+        spToCurrencies.setSelection(spFromCurrenciesPosition)
     }
 }
