@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/currency_nav"
+    app:startDestination="@id/currencyExchangeFragment">
+
+    <fragment
+        android:id="@+id/currencyExchangeFragment"
+        android:name="com.task.currencyapp.ui.currencyexchange.CurrencyExchangeFragment"
+        android:label="currency_exchange_fragment"
+        tools:layout="@layout/fragment_exchange_currency">
+
+        <action
+            android:id="@+id/to_details_currency_fragment"
+            app:destination="@id/detailsCurrencyFragment" />
+    </fragment>
+
+
+    <fragment
+        android:id="@+id/detailsCurrencyFragment"
+        android:name="com.task.currencyapp.ui.details.DetailsCurrencyFragment"
+        android:label="details_currency_fragment"
+        tools:layout="@layout/fragment_currency_details">
+       <argument
+            android:name="ratesList"
+            app:argType="com.task.currencyapp.data.model.CurrencyRatesList" />
+    </fragment>
+</navigation>

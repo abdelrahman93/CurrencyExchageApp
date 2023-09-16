@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/green2"
+    tools:context="com.task.currencyapp.ui.currencyexchange.CurrencyExchangeFragment">
+
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/consFromToCurrency"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/_200sdp"
+        android:background="@drawable/bg_bottom_rounded_full_green_border"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/consFromToCurrencyCalculation"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_30sdp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <Spinner
+                android:id="@+id/spFromCurrencies"
+                android:layout_width="@dimen/_100sdp"
+                android:layout_height="@dimen/_50sdp"
+                android:layout_margin="@dimen/_10sdp"
+                android:background="@drawable/bg_rounded_dimed_white"
+                android:gravity="center"
+                android:spinnerMode="dropdown"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/btnSwap"
+                style="@style/buttonStyle"
+                android:layout_width="@dimen/_60sdp"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/_10sdp"
+                android:background="@drawable/dimed_rounded_green_btn_status"
+                android:enabled="false"
+                android:text="@string/swap"
+                app:layout_constraintBottom_toBottomOf="@id/spFromCurrencies"
+                app:layout_constraintStart_toEndOf="@+id/spFromCurrencies"
+                app:layout_constraintTop_toTopOf="@id/spFromCurrencies" />
+
+            <Spinner
+                android:id="@+id/spToCurrencies"
+                android:layout_width="@dimen/_100sdp"
+                android:layout_height="@dimen/_50sdp"
+                android:layout_margin="@dimen/_10sdp"
+                android:background="@drawable/bg_rounded_dimed_white"
+                android:gravity="center"
+                android:spinnerMode="dropdown"
+                app:layout_constraintStart_toEndOf="@id/btnSwap"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <EditText
+                android:id="@+id/etValueFrom"
+                android:layout_width="@dimen/_100sdp"
+                android:layout_height="@dimen/_50sdp"
+                android:layout_margin="@dimen/_10sdp"
+                android:background="@drawable/bg_rounded_dimed_white"
+                android:gravity="center"
+                android:hint="ex 1"
+                android:inputType="number"
+                app:layout_constraintEnd_toEndOf="@id/spFromCurrencies"
+                app:layout_constraintStart_toStartOf="@id/spFromCurrencies"
+                app:layout_constraintTop_toBottomOf="@id/spFromCurrencies" />
+
+            <EditText
+                android:id="@+id/etValueTo"
+                android:layout_width="@dimen/_100sdp"
+                android:layout_height="@dimen/_50sdp"
+                android:layout_margin="@dimen/_10sdp"
+                android:background="@drawable/bg_rounded_dimed_white"
+                android:gravity="center"
+                android:hint="ex 1"
+                android:inputType="number"
+                app:layout_constraintEnd_toEndOf="@id/spToCurrencies"
+                app:layout_constraintStart_toStartOf="@id/spToCurrencies"
+                app:layout_constraintTop_toBottomOf="@id/spToCurrencies" />
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/btnDetails"
+        style="@style/buttonStyle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/_80sdp"
+        android:background="@drawable/dimed_rounded_green_btn_status"
+        android:enabled="false"
+        android:text="@string/details"
+        app:layout_constraintTop_toBottomOf="@id/consFromToCurrency" />
+</androidx.constraintlayout.widget.ConstraintLayout>
