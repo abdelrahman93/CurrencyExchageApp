@@ -20,6 +20,9 @@ class CurrencyExchangeFragment :
 
     private var exchangeFromRate = 0.0
     private var exchangeToRate = 0.0
+    private var exchangeFromCurrencyCode = ""
+    private var exchangeToCurrencyCode = ""
+
     private var convertCurrencyFrom = true
 
     override fun injectDagger() = DaggerAppComponent.factory()
@@ -35,20 +38,25 @@ class CurrencyExchangeFragment :
             swapButtonClicked()
         }
         viewModel.getCurrencyRates()
+
+        btnDetails.setOnClickListener {
+            val symbols = "$exchangeFromCurrencyCode,$exchangeToCurrencyCode"
+            viewModel.getHistoricalCurrencyRatesForThreeLastDays(symbols.toUpperCase())
+        }
     }
 
     override fun renderView(viewState: BaseViewState?) {
         when (viewState) {
-            is CurrencyExchangeViewState.SuccessState -> {
+            is CurrencyExchangeViewState.SuccessLatestState -> {
                 setupSpinnerFromAndTo(viewState.response.rates)
-
-                btnDetails.setOnClickListener {
-                    navigateToDetailsScreen(viewModel.initCurrencyHistoricalList(response = viewState.response))
-                }
             }
 
-            is CurrencyExchangeViewState.ErrorState -> {
+            is CurrencyExchangeViewState.ErrorLatestState -> {
                 Log.i("TAG", "renderView:Error  " + viewState.msg)
+            }
+
+            is CurrencyExchangeViewState.SuccessHistoricalState -> {
+                navigateToDetailsScreen(viewModel.initCurrencyHistoricalList(historicalCurrencyResponse = viewState.response, currencyCodeFrom = exchangeFromCurrencyCode, currencyCodeTo = exchangeToCurrencyCode))
             }
         }
     }
@@ -78,6 +86,7 @@ class CurrencyExchangeFragment :
                 val selectedFromRate = ratesArray[position]
                 // Handle the selected rate here
                 exchangeFromRate = selectedFromRate.exchangeRate
+                exchangeFromCurrencyCode = selectedFromRate.currencyCode
                 setupValueTo()
             }
 
@@ -97,6 +106,7 @@ class CurrencyExchangeFragment :
                 val selectedToRate = ratesArray[position]
                 // Handle the selected rate here
                 exchangeToRate = selectedToRate.exchangeRate
+                exchangeToCurrencyCode = selectedToRate.currencyCode
                 setupValueTo()
             }
 

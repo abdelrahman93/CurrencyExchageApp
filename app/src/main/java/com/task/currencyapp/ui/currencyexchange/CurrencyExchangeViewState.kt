@@ -8,7 +8,9 @@ import com.task.currencyapp.data.model.CurrencyResponse
  */
 class CurrencyExchangeViewState : BaseViewState() {
 
-    class SuccessState(val response: CurrencyResponse) : BaseViewState()
-    class ErrorState(val msg: String) : BaseViewState()
+    class SuccessLatestState(val response: CurrencyResponse) : BaseViewState()
+    class ErrorLatestState(val msg: String) : BaseViewState()
 
+    class SuccessHistoricalState(val response: List<CurrencyResponse>) : BaseViewState()
+    class ErrorHistoricalState(val msg: String) : BaseViewState()
 }

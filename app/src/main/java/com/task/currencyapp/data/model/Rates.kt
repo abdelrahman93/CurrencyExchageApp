@@ -5,7 +5,7 @@ import com.google.gson.annotations.SerializedName
 // Define the Rate data class
 data class Rate(
     val currencyCode: String,
-    val exchangeRate: Double
+    var exchangeRate: Double
 )
 
 data class Rates(

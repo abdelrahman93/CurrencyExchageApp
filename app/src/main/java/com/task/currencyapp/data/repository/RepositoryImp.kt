@@ -13,4 +13,12 @@ class RepositoryImp @Inject constructor(var exchangeCurrencyAPI: ExchangeCurrenc
             ACCESS_KEY_VALUE
         )
     }
+
+    override fun getHistoricalCurrencyExchangeRates(symbols: String,date :String): Observable<CurrencyResponse> {
+        return exchangeCurrencyAPI.getHistoricalCurrencyExchangeRates(
+            date,
+            ACCESS_KEY_VALUE,
+            symbols
+        )
+    }
 }

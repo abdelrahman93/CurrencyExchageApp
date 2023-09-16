@@ -6,5 +6,7 @@ class ExchangeCurrenciesConstants {
         const val BASE_URL = "http://data.fixer.io/"
         const val ACCESS_KEY = "access_key"
         const val ACCESS_KEY_VALUE = "e24afa81d2f80d54cb1fe59abfcb375e"
+        const val SYMBOLS = "symbols"
+        const val DATE = "date"
     }
 }

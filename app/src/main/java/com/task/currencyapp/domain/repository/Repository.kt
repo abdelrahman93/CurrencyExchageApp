@@ -5,4 +5,5 @@ import io.reactivex.Observable
 
 interface Repository {
     fun getCurrencyExchangeRates(): Observable<CurrencyResponse>
+    fun getHistoricalCurrencyExchangeRates(symbols: String, date: String): Observable<CurrencyResponse>
 }

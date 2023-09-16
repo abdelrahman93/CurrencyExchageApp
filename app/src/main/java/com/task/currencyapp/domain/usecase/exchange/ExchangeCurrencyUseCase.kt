@@ -8,4 +8,8 @@ import io.reactivex.Observable
  */
 interface ExchangeCurrencyUseCase {
     fun getCurrencyExchangeRates(): Observable<CurrencyResponse>
+
+    fun getHistoricalCurrencyExchangeRates(symbols: String, index: Int): Observable<CurrencyResponse>
+
+    fun fetchCurrencyRatesThreeTimes(symbols: String): Observable<List<CurrencyResponse>>
 }

@@ -52,8 +52,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/_20sdp"
                 android:text="@string/from"
-                app:layout_constraintEnd_toEndOf="@+id/tvLabelTo"
-                app:layout_constraintStart_toEndOf="@+id/tvLabelDay"
+                app:layout_constraintEnd_toStartOf="@+id/tvLabelTo"
+                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <androidx.appcompat.widget.AppCompatTextView
@@ -61,8 +61,7 @@
                 style="@style/TextStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/_20sdp"
-                android:layout_marginEnd="@dimen/_20sdp"
+                android:layout_marginStart="@dimen/_60sdp"
                 android:text="@string/to"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"

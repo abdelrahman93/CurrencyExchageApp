@@ -32,7 +32,6 @@ class DetailsCurrencyFragment : Fragment() {
     }
 
     private fun initView() {
-        tvTitle.text = getString(R.string.details)
         adapter = DetailsCurrencyAdapter(ArrayList())
         rvCurrencyList.adapter = adapter
         adapter.addAll(args.ratesList)

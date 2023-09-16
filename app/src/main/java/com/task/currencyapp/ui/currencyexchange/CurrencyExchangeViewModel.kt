@@ -29,48 +29,41 @@ class CurrencyExchangeViewModel @Inject constructor(
             request = exchangeCurrencyUseCase.getCurrencyExchangeRates(),
             loader = Loader.Progress(true),
             error = io.reactivex.functions.Consumer { errorMsg ->
-                internalState.value = CurrencyExchangeViewState.ErrorState(errorMsg.message.toString())
+                internalState.value = CurrencyExchangeViewState.ErrorLatestState(errorMsg.message.toString())
             },
             success = io.reactivex.functions.Consumer { response ->
-                internalState.value = CurrencyExchangeViewState.SuccessState(response)
+                internalState.value = CurrencyExchangeViewState.SuccessLatestState(response)
             }
 
         )
     }
-    fun initCurrencyHistoricalList(response: CurrencyResponse): CurrencyRatesList {
+
+    fun getHistoricalCurrencyRatesForThreeLastDays(symbols: String) {
+        subscribe(
+            request = exchangeCurrencyUseCase.fetchCurrencyRatesThreeTimes(symbols),
+            loader = Loader.Progress(true),
+            error = io.reactivex.functions.Consumer { errorMsg ->
+                internalState.value = CurrencyExchangeViewState.ErrorHistoricalState(errorMsg.message.toString())
+            },
+            success = io.reactivex.functions.Consumer { response ->
+                internalState.value = CurrencyExchangeViewState.SuccessHistoricalState(response)
+            }
+
+        )
+    }
+
+    fun initCurrencyHistoricalList(historicalCurrencyResponse: List<CurrencyResponse>, currencyCodeFrom: String, currencyCodeTo: String): CurrencyRatesList {
         val list = CurrencyRatesList()
+        val sortedList = historicalCurrencyResponse.sortedByDescending { it.date }
 
-        list.add(
-            CurrencyRatesListItem(
-                exchangeRate = "1.23",
-                day = "Day 1",
-                currencyCodeFrom = "AED",
-                currencyCodeTo = "EGP"
-            )
-        )
-        list.add(
-            CurrencyRatesListItem(
-                exchangeRate = "4.23",
-                day = "Day 2",
-                currencyCodeFrom = "US",
-                currencyCodeTo = "EGP"
-            )
-        )
-
-        list.add(
-            CurrencyRatesListItem(
-                exchangeRate = "3.23",
-                day = "Day 3",
-                currencyCodeFrom = "Euro",
-                currencyCodeTo = "EGP"
-            )
-        )
-
+        for (item in sortedList) {
+            list.add(mapCurrencyResponseToUI(item, currencyCodeFrom, currencyCodeTo))
+        }
         return list
     }
 
     // Convert the Rates data class into an ArrayList of Rate objects
-    internal fun convertRatesToArrayList(rates: Rates): ArrayList<Rate> {
+    fun convertRatesToArrayList(rates: Rates): ArrayList<Rate> {
         val rateList = ArrayList<Rate>()
 
         // Use reflection to iterate through the fields of Rates and add them to the list
@@ -79,10 +72,29 @@ class CurrencyExchangeViewModel @Inject constructor(
         for (property in properties) {
             val fieldName = property.name.toUpperCase()
             val fieldValue = property.get(rates) as Double
-
-            rateList.add(Rate(fieldName, fieldValue))
+            if (fieldValue != 0.0) {
+                rateList.add(Rate(fieldName, fieldValue))
+            }
         }
 
         return rateList
+    }
+
+    private fun mapCurrencyResponseToUI(currencyResponse: CurrencyResponse, currencyCodeFrom: String, currencyCodeTo: String): CurrencyRatesListItem {
+        val arrayRates = convertRatesToArrayList(currencyResponse.rates)
+
+        val rateFrom = (arrayRates.find { it.currencyCode == currencyCodeFrom })
+        val rateTo = arrayRates.find { it.currencyCode == currencyCodeTo }
+
+        val rate = (rateTo?.exchangeRate ?: 0.0) / (rateFrom?.exchangeRate ?: 0.0)
+
+        val formattedValue = String.format("%.2f", rate)
+
+        return CurrencyRatesListItem(
+            exchangeRate = formattedValue,
+            day = currencyResponse.date,
+            currencyCodeFrom = "1 $currencyCodeFrom",
+            currencyCodeTo = "$currencyCodeTo"
+        )
     }
 }
