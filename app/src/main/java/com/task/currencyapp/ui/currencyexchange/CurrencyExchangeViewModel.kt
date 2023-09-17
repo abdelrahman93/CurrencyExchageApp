@@ -62,6 +62,17 @@ class CurrencyExchangeViewModel @Inject constructor(
         return list
     }
 
+    fun initOtherCurrenciesList(listRates: ArrayList<Rate>, currencyCodeFrom: String): CurrencyRatesList {
+        val list = CurrencyRatesList()
+        val otherCurrencyArray = listOf("USD", "EUR", "SAR", "EGP", "CZK", "JPY", "KES", "AED", "SBD", "QAR")
+        for (item in otherCurrencyArray) {
+            if ((currencyCodeFrom == item).not()) {
+                list.add(mapOthersCurrencyResponseToUI(listRates, currencyCodeFrom, item))
+            }
+        }
+        return list
+    }
+
     // Convert the Rates data class into an ArrayList of Rate objects
     fun convertRatesToArrayList(rates: Rates): ArrayList<Rate> {
         val rateList = ArrayList<Rate>()
@@ -82,19 +93,31 @@ class CurrencyExchangeViewModel @Inject constructor(
 
     private fun mapCurrencyResponseToUI(currencyResponse: CurrencyResponse, currencyCodeFrom: String, currencyCodeTo: String): CurrencyRatesListItem {
         val arrayRates = convertRatesToArrayList(currencyResponse.rates)
-
-        val rateFrom = (arrayRates.find { it.currencyCode == currencyCodeFrom })
-        val rateTo = arrayRates.find { it.currencyCode == currencyCodeTo }
-
-        val rate = (rateTo?.exchangeRate ?: 0.0) / (rateFrom?.exchangeRate ?: 0.0)
-
-        val formattedValue = String.format("%.2f", rate)
+        val result = calculateCurrencyRate(arrayRates, currencyCodeFrom, currencyCodeTo)
 
         return CurrencyRatesListItem(
-            exchangeRate = formattedValue,
+            exchangeRate = result,
             day = currencyResponse.date,
             currencyCodeFrom = "1 $currencyCodeFrom",
             currencyCodeTo = "$currencyCodeTo"
         )
+    }
+
+    private fun mapOthersCurrencyResponseToUI(listRates: ArrayList<Rate>, currencyCodeFrom: String, currencyCodeTo: String): CurrencyRatesListItem {
+        val result = calculateCurrencyRate(listRates, currencyCodeFrom, currencyCodeTo)
+
+        return CurrencyRatesListItem(
+            exchangeRate = result,
+            currencyCodeFrom = "1 $currencyCodeFrom",
+            currencyCodeTo = "$currencyCodeTo"
+        )
+    }
+
+    private fun calculateCurrencyRate(listRates: ArrayList<Rate>, currencyCodeFrom: String, currencyCodeTo: String): String {
+        val rateFrom = (listRates.find { it.currencyCode == currencyCodeFrom })
+        val rateTo = listRates.find { it.currencyCode == currencyCodeTo }
+        val rate = (rateTo?.exchangeRate ?: 0.0) / (rateFrom?.exchangeRate ?: 0.0)
+        val formattedValue = String.format("%.2f", rate)
+        return formattedValue
     }
 }

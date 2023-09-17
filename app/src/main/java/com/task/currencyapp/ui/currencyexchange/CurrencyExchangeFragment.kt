@@ -5,11 +5,13 @@ import android.text.TextWatcher
 import android.util.Log
 import android.view.View
 import android.widget.AdapterView
+import android.widget.Toast
 import androidx.navigation.fragment.findNavController
 import com.task.currencyapp.BaseFragment
 import com.task.currencyapp.R
 import com.task.currencyapp.base.BaseViewState
 import com.task.currencyapp.data.model.CurrencyRatesList
+import com.task.currencyapp.data.model.Rate
 import com.task.currencyapp.data.model.Rates
 import com.task.currencyapp.di.component.DaggerAppComponent
 import com.task.currencyapp.ui.currencyexchange.adapter.CustomSpinnerAdapter
@@ -22,6 +24,8 @@ class CurrencyExchangeFragment :
     private var exchangeToRate = 0.0
     private var exchangeFromCurrencyCode = ""
     private var exchangeToCurrencyCode = ""
+
+    private var arrayRatesLatest = ArrayList<Rate>()
 
     private var convertCurrencyFrom = true
 
@@ -48,26 +52,40 @@ class CurrencyExchangeFragment :
     override fun renderView(viewState: BaseViewState?) {
         when (viewState) {
             is CurrencyExchangeViewState.SuccessLatestState -> {
-                setupSpinnerFromAndTo(viewState.response.rates)
+                setupSpinnersFromAndTo(viewState.response.rates)
             }
 
             is CurrencyExchangeViewState.ErrorLatestState -> {
-                Log.i("TAG", "renderView:Error  " + viewState.msg)
+                Toast.makeText(
+                    activity,
+                    getString(R.string.generic_error),
+                    Toast.LENGTH_LONG
+                ).show()
             }
 
             is CurrencyExchangeViewState.SuccessHistoricalState -> {
-                navigateToDetailsScreen(viewModel.initCurrencyHistoricalList(historicalCurrencyResponse = viewState.response, currencyCodeFrom = exchangeFromCurrencyCode, currencyCodeTo = exchangeToCurrencyCode))
+                val otherCurrenciesRatesList = viewModel.initOtherCurrenciesList(listRates = arrayRatesLatest, currencyCodeFrom = exchangeFromCurrencyCode)
+                navigateToDetailsScreen(viewModel.initCurrencyHistoricalList(historicalCurrencyResponse = viewState.response, currencyCodeFrom = exchangeFromCurrencyCode, currencyCodeTo = exchangeToCurrencyCode), otherCurrenciesRatesList)
+            }
+
+            is CurrencyExchangeViewState.ErrorHistoricalState -> {
+                Toast.makeText(
+                    activity,
+                    getString(R.string.generic_error),
+                    Toast.LENGTH_LONG
+                ).show()
             }
         }
     }
 
-    private fun navigateToDetailsScreen(listCurrencyList: CurrencyRatesList) {
-        val action = CurrencyExchangeFragmentDirections.toDetailsCurrencyFragment(listCurrencyList)
+    private fun navigateToDetailsScreen(historyCurrencyRatesList: CurrencyRatesList, otherCurrenciesRatesList: CurrencyRatesList) {
+        val action = CurrencyExchangeFragmentDirections.toDetailsCurrencyFragment(historyCurrencyRatesList, otherCurrenciesRatesList)
         findNavController().navigate(action)
     }
 
-    private fun setupSpinnerFromAndTo(rates: Rates) {
+    private fun setupSpinnersFromAndTo(rates: Rates) {
         val ratesArray = viewModel.convertRatesToArrayList(rates)
+        arrayRatesLatest = ratesArray
         val adapter = activity?.let { CustomSpinnerAdapter(it, ratesArray) }
         spFromCurrencies.adapter = adapter
         spToCurrencies.adapter = adapter
@@ -118,7 +136,7 @@ class CurrencyExchangeFragment :
 
     fun setupValueTo() {
         // From Endpoint Base is EUR to All Currencies rate
-        // Equation = (rateCurrencyFrom / rateCurrencyTo) * numbers of [CurrencyFrom]
+        // Equation = (rateCurrencyTo / rateCurrencyFrom) * numbers of [CurrencyFrom]
 
         if (etValueFrom.text.isNullOrEmpty().not()) {
             val fromFieldNumbers = etValueFrom.text.toString().toDouble()
@@ -176,7 +194,6 @@ class CurrencyExchangeFragment :
     private fun swapButtonClicked() {
         val spFromCurrenciesPosition = spFromCurrencies.selectedItemPosition
         val spToCurrenciesPosition = spToCurrencies.selectedItemPosition
-
         spFromCurrencies.setSelection(spToCurrenciesPosition)
         spToCurrencies.setSelection(spFromCurrenciesPosition)
     }

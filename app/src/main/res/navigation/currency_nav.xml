@@ -25,5 +25,8 @@
        <argument
             android:name="ratesList"
             app:argType="com.task.currencyapp.data.model.CurrencyRatesList" />
+        <argument
+            android:name="ratesOthersList"
+            app:argType="com.task.currencyapp.data.model.CurrencyRatesList" />
     </fragment>
 </navigation>

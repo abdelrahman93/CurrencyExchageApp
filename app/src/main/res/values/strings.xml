@@ -8,6 +8,7 @@
     <string name="to">To</string>
     <string name="rate">Rate</string>
     <string name="title_details">Currency Rate Details</string>
-
+    <string name="title_other_details">Other Currencies Rates</string>
+    <string name="generic_error">Somthing went Error , Please try again later</string>
 
 </resources>

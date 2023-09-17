@@ -8,5 +8,5 @@ data class CurrencyRatesListItem(
     var currencyCodeFrom: String?,
     var currencyCodeTo: String?,
     var exchangeRate: String?,
-    var day: String?
+    var day: String? = ""
 ) : Parcelable

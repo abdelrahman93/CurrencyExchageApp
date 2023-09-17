@@ -48,7 +48,7 @@ abstract class BaseFragment<VM : BaseViewModel>(val vmClass: Class<VM>) : Fragme
                     is ErrorViewState.Error -> {
                         Toast.makeText(
                             activity,
-                            it.message,
+                            getString(R.string.generic_error),
                             Toast.LENGTH_LONG
                         ).show()
                     }

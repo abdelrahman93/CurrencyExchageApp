@@ -8,14 +8,16 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.navArgs
 import com.task.currencyapp.R
 import com.task.currencyapp.ui.details.adapter.DetailsCurrencyAdapter
+import com.task.currencyapp.ui.details.adapter.OthersCurrencyAdapter
 import kotlinx.android.synthetic.main.fragment_currency_details.rvCurrencyList
-import kotlinx.android.synthetic.main.fragment_currency_details.tvTitle
+import kotlinx.android.synthetic.main.fragment_currency_details.rvCurrencyListOthers
 
 class DetailsCurrencyFragment : Fragment() {
 
     private val args: DetailsCurrencyFragmentArgs by navArgs()
 
-    private lateinit var adapter: DetailsCurrencyAdapter
+    private lateinit var adapterHistorical: DetailsCurrencyAdapter
+    private lateinit var adapterOtherCurrencies: OthersCurrencyAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -32,9 +34,14 @@ class DetailsCurrencyFragment : Fragment() {
     }
 
     private fun initView() {
-        adapter = DetailsCurrencyAdapter(ArrayList())
-        rvCurrencyList.adapter = adapter
-        adapter.addAll(args.ratesList)
-        adapter.notifyDataSetChanged()
+        // setup Historical Currency
+        adapterHistorical = DetailsCurrencyAdapter(ArrayList())
+        rvCurrencyList.adapter = adapterHistorical
+        adapterHistorical.addAll(args.ratesList)
+
+        // setup Historical Currency
+        adapterOtherCurrencies = OthersCurrencyAdapter(ArrayList())
+        rvCurrencyListOthers.adapter = adapterOtherCurrencies
+        adapterOtherCurrencies.addAll(args.ratesOthersList)
     }
 }
